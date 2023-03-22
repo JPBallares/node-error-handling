@@ -29,6 +29,11 @@ app.use(express.json());
 app.use('/api/items', itemsRouter);
 
 app.use(errorHandler);
+
+/**
+ * this will be the last in the configs
+ * anything that doesn't match the route will use this for fallback
+ */
 app.use(notFoundHandler);
 
 /**

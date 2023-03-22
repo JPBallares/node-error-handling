@@ -1,8 +1,8 @@
-import HttpException from '../errors/HttpError';
+import HttpError from '../errors/HttpError';
 import { Request, Response, NextFunction } from 'express';
 
 export const errorHandler = (
-  error: HttpException,
+  error: HttpError,
   request: Request,
   response: Response,
   next: NextFunction
