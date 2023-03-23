@@ -1,14 +1,17 @@
-export default class HttpError extends Error {
-  statusCode?: number;
-  status?: number;
-  message: string;
-  error: string | null;
-  
-  constructor(statusCode: number, message: string, error?: string) {
-    super(message);
-  
+class HttpError extends Error {
+  name: string;
+  statusCode: number;
+  isOperational: boolean;
+
+  constructor(name: string, statusCode: number, isOperational: boolean, description: string) {
+    super(description);
+
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = name;
     this.statusCode = statusCode;
-    this.message = message;
-    this.error = error || null;
+    this.isOperational = isOperational;
+    Error.captureStackTrace(this);
   }
 }
+
+export default HttpError;

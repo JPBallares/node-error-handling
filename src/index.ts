@@ -4,10 +4,23 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 import { itemsRouter } from './routers/items';
-import { errorHandler } from './middlewares/errorHandler';
 import { notFoundHandler } from './middlewares/notFoundHandler';
+import { isOperationalError, logError, logErrorMiddleware, returnError } from './middlewares/logError';
+import httpLogger from './errors/httpLogger';
 
 dotenv.config();
+
+process.on('unhandledRejection', error => {
+  throw error;
+});
+
+process.on('uncaughtException', error => {
+  logError(error);
+ 
+  if (!isOperationalError(error)) {
+    process.exit(1);
+  }
+});
 
 /**
  * App Variables
@@ -26,9 +39,11 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(httpLogger);
 app.use('/api/items', itemsRouter);
 
-app.use(errorHandler);
+app.use(logErrorMiddleware);
+app.use(returnError);
 
 /**
  * this will be the last in the configs
