@@ -40,8 +40,16 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(httpLogger);
+
+// health check route
+app.get('/_health', (req, res) => {
+  res.status(200).send('ok');
+});
+
+// rest api
 app.use('/api/items', itemsRouter);
 
+// error handler should be placed at last
 app.use(logErrorMiddleware);
 app.use(returnError);
 
